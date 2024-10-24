@@ -1,4 +1,5 @@
 import os
+import time
 import numpy as np
 from utils.CSVHandler import CSVHandler
 from LinearRegression.LinearRegressionNoLib import LinearRegressionNoLib as LinearNoLib
@@ -14,16 +15,24 @@ def runLinearRegression():
     dataframe = csv_handler.read_csv()
 
     print("- Linear Regression No Library")
+    start_time = time.time()
     linearWithLib = LinearNoLib(dataframe)
     linearWithLib.training()
     linearWithLib.getModelInfo()
     print(f"Predict: [[93, 1212, 6]] => y = {linearWithLib.predict([93, 1212, 6])}")
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"Thời gian chạy: {execution_time:.6f} giây")
 
     print("\n- Linear Regression With Library")
+    start_time = time.time()
     linearWithLib = LinearWithLib(dataframe)
     linearWithLib.training()
     linearWithLib.getModelInfo()
     print(f"Predict: [[93, 1212, 6]] => y = {linearWithLib.predict([93, 1212, 6])}")
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"Thời gian chạy: {execution_time:.6f} giây")
 
 def runLogisticRegression():
     print("\n=======================")
@@ -33,17 +42,29 @@ def runLogisticRegression():
     dataframe = csv_handler.read_csv()
 
     print("- Logistic Regression No Library")
+    start_time = time.time()
+    logisticNoLib = LogisticNoLib(dataframe)
+    logisticNoLib.training()
+    logisticNoLib.getModelInfo()
+    print(f"Predict: [55.5, 97.5, 8.8, 28.2, 72.2] => y = {logisticNoLib.predict([55.5, 97.5, 8.8, 28.2, 72.2])}")
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"Thời gian chạy: {execution_time:.6f} giây")
 
     print("\n- Logistic Regression With Library")
+    start_time = time.time()
     logisticWithLib = LogisticWithLib(dataframe)
     logisticWithLib.training()
     logisticWithLib.getModelInfo()
     print(f"Predict: [55.5, 97.5, 8.8, 28.2, 72.2] => y = {logisticWithLib.predict([55.5, 97.5, 8.8, 28.2, 72.2])}")
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"Thời gian chạy: {execution_time:.6f} giây")
 
 def main():
     os.system('cls')
 
-    # runLinearRegression()
+    runLinearRegression()
     runLogisticRegression()
 
 if __name__ == "__main__":

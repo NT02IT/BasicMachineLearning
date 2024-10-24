@@ -10,7 +10,6 @@ class LogisticRegressionWLib:
     def training(self):
         X = self.dataframe[['Gene1', 'Gene2', 'Gene3', 'Gene4', 'Gene5']]
         y = self.dataframe['5-year survival']
-
         self.model = LogisticRegression()
         self.model.fit(X, y)
 
