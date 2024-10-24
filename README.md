@@ -3,10 +3,10 @@
 Trong thư mục dự án của bạn, mở terminal (hoặc command prompt) và chạy lệnh sau để tạo môi trường ảo:
 
 ```bash
-python -m venv myvenv
+python -m venv venv
 ```
 
-`myvenv` là tên thư mục của môi trường ảo mà bạn sẽ tạo ra. Bạn có thể đặt tên khác nếu muốn.
+`venv` ở sau là tên thư mục của môi trường ảo mà bạn sẽ tạo ra. Bạn có thể đặt tên khác nếu muốn.
 
 ## Bước 2: Kích Hoạt Môi Trường Ảo
 
