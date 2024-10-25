@@ -12,8 +12,8 @@ class CSVHandler:
             print(f"File {self.file_path} không tồn tại.")
             return pd.DataFrame()  # Trả về DataFrame rỗng nếu không có file.
 
-    def write_csv(self, df):
-        df.to_csv(self.file_path, index=False)
+    def write_csv(self, df, path):
+        df.to_csv(path, index=False)
 
     def append_row(self, row):
         try:

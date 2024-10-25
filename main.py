@@ -11,25 +11,23 @@ def runLinearRegression():
     print("\n=====================")
     print("= LINEAR REGRESSION =")
     print("=====================\n")
-    csv_handler = CSVHandler('Dataset\linear-regression.csv')
-    dataframe = csv_handler.read_csv()
 
     print("- Linear Regression No Library")
     start_time = time.time()
-    linearWithLib = LinearNoLib(dataframe)
+    linearWithLib = LinearNoLib()
     linearWithLib.training()
     linearWithLib.getModelInfo()
-    print(f"Predict: [[93, 1212, 6]] => y = {linearWithLib.predict([93, 1212, 6])}")
+    linearWithLib.predict()
     end_time = time.time()
     execution_time = end_time - start_time
     print(f"Thời gian chạy: {execution_time:.6f} giây")
 
     print("\n- Linear Regression With Library")
     start_time = time.time()
-    linearWithLib = LinearWithLib(dataframe)
+    linearWithLib = LinearWithLib()
     linearWithLib.training()
     linearWithLib.getModelInfo()
-    print(f"Predict: [[93, 1212, 6]] => y = {linearWithLib.predict([93, 1212, 6])}")
+    linearWithLib.predict()
     end_time = time.time()
     execution_time = end_time - start_time
     print(f"Thời gian chạy: {execution_time:.6f} giây")
@@ -38,33 +36,34 @@ def runLogisticRegression():
     print("\n=======================")
     print("= LOGISTIC REGRESSION =")
     print("=======================\n")
-    csv_handler = CSVHandler('Dataset\logistic-regression.csv')
-    dataframe = csv_handler.read_csv()
 
     print("- Logistic Regression No Library")
     start_time = time.time()
-    logisticNoLib = LogisticNoLib(dataframe)
-    logisticNoLib.training()
+    logisticNoLib = LogisticNoLib()
+    # logisticNoLib.training()
+    logisticNoLib.trainingFullDataset()
     logisticNoLib.getModelInfo()
-    print(f"Predict: [55.5, 97.5, 8.8, 28.2, 72.2] => y = {logisticNoLib.predict([55.5, 97.5, 8.8, 28.2, 72.2])}")
+    logisticNoLib.testing()
+    logisticNoLib.predict()
     end_time = time.time()
     execution_time = end_time - start_time
     print(f"Thời gian chạy: {execution_time:.6f} giây")
 
     print("\n- Logistic Regression With Library")
     start_time = time.time()
-    logisticWithLib = LogisticWithLib(dataframe)
-    logisticWithLib.training()
+    logisticWithLib = LogisticWithLib()
+    # logisticWithLib.training()
+    logisticWithLib.trainingFullDataset()
     logisticWithLib.getModelInfo()
-    print(f"Predict: [55.5, 97.5, 8.8, 28.2, 72.2] => y = {logisticWithLib.predict([55.5, 97.5, 8.8, 28.2, 72.2])}")
+    logisticWithLib.testing()
+    logisticWithLib.predict()
     end_time = time.time()
     execution_time = end_time - start_time
     print(f"Thời gian chạy: {execution_time:.6f} giây")
 
 def main():
     os.system('cls')
-
-    runLinearRegression()
+    # runLinearRegression()
     runLogisticRegression()
 
 if __name__ == "__main__":

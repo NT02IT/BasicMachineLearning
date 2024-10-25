@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from utils.CSVHandler import CSVHandler
+import os
 
 # Model: y(x1, x2, x3) = w0 + w1.x1 + w2.x2 + w3.x3
 # X = [1, x1(1:N), x2(1:N), x3(1:N)]^T
@@ -15,8 +17,9 @@ import pandas as pd
 # Giải hệ phương trình trên để tìm được w0, w1, w2, w3
 
 class LinearRegressionNoLib:
-    def __init__(self, dataframe):
-        self.dataframe = dataframe
+    def __init__(self):
+        csv_handler = CSVHandler('Dataset\linear-regression.csv')
+        self.dataframe = csv_handler.read_csv()
     
     def training(self):
         #LẤY DỮ LIỆU TRÊN BẢNG
@@ -40,12 +43,13 @@ class LinearRegressionNoLib:
         W = np.linalg.solve(A, B)
         self.W = np.array([W[0], W[1], W[2], W[3]]).reshape(-1, 1)        
 
-    def predict(self, X):       
-        # Kiểm tra kích thước của X có phù hợp với số lượng biến không
-        if len(X) != 3:
-            raise ValueError(f"Kích thước X không hợp lệ, cần có 3 cột.")        
-        y = self.W[0] + self.W[1]*X[0] + self.W[2]*X[1] + self.W[3]*X[2]
-        return y[0]
+    def predict(self):
+        path='Dataset\predict\linear-regression-nolib.csv'       
+        csv_handler = CSVHandler(path)
+        predictDataframe = csv_handler.read_csv()
+        predictDataframe['PredictedSales'] = self.W[0] + self.W[1]*predictDataframe['Temperature'] + self.W[2]*predictDataframe['Tourists'] + self.W[3]*predictDataframe['SunnyDays']
+        csv_handler.write_csv(predictDataframe, path)
+        os.startfile(path)
     
     def getModelInfo(self):
         print(f"Intercept (hệ số tự do): {self.W[0]}")
