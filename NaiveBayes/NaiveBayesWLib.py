@@ -1,0 +1,69 @@
+import os
+import numpy as np
+import pandas as pd
+from sklearn.metrics import accuracy_score
+from sklearn.calibration import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+
+from utils.CSVHandler import CSVHandler
+
+class NaiveBayesWLib:
+    def __init__(self):
+        self.model = GaussianNB()
+
+        csv_handler = CSVHandler('Dataset\\naive-bayes.csv')
+        dataframe = csv_handler.read_csv()
+
+        # ENCODE DATA Chuyển từ chữ sang số
+        columns = ['Size','Number','Thickness','Lung Cancer']
+        self.label_encoders = {}  # Tạo từ điển lưu LabelEncoder cho mỗi cột
+        for col in columns:
+            le = LabelEncoder()
+            dataframe[col] = le.fit_transform(dataframe[col])
+            self.label_encoders[col] = le  # Lưu LabelEncoder để chuyển đổi ngược lại
+
+        self.X = dataframe[['Size','Number','Thickness']]
+        self.y = dataframe['Lung Cancer']
+
+        # Chia dữ liệu làm 2 phần training và testing
+        split_index = int(len(dataframe) * 0.5)
+        self.Xtrain = self.X.iloc[:split_index]  
+        self.ytrain = self.y.iloc[:split_index]  
+        self.Xtest = self.X.iloc[split_index:]   
+        self.ytest = self.y.iloc[split_index:]       
+
+    def training(self):
+        self.model.fit(self.Xtrain, self.ytrain)
+
+    def trainingFullDataset(self):
+        self.model.fit(self.X, self.y)
+
+    def testing(self):
+        # Dự đoán trên tập testing
+        y_pred = self.model.predict(self.Xtest)
+
+        # Tính độ chính xác so với kết quả thực tế
+        accuracy = accuracy_score(self.ytest, y_pred) * 100
+        print(f"Độ chính xác: {accuracy}%")       
+
+    def predict(self):
+        path='Dataset\predict\\naive-bayes-withlib.csv'       
+        csv_handler = CSVHandler(path)
+        predictDataframe = csv_handler.read_csv()
+
+        # ENCODE DATA Chuyển từ chữ sang số
+        label_encoder = LabelEncoder()
+        columns = ['Size','Number','Thickness','Lung Cancer']
+        for col in columns:
+            predictDataframe[col] = label_encoder.fit_transform(predictDataframe[col])
+
+        X = predictDataframe[['Size','Number','Thickness']]
+        predictDataframe['Lung Cancer'] = self.model.predict(X)
+
+        # Label decode
+        for col in ['Size','Number','Thickness','Lung Cancer']:
+            predictDataframe[col] = self.label_encoders[col].inverse_transform(predictDataframe[col])
+
+        csv_handler.write_csv(predictDataframe, path)
+        os.startfile(path)

@@ -7,14 +7,15 @@ import os
 
 class LinearRegressionWLib:
     def __init__(self):
+        self.model = LinearRegression()
+
         csv_handler = CSVHandler('Dataset\linear-regression.csv')
-        self.dataframe = csv_handler.read_csv()      
+        dataframe = csv_handler.read_csv()   
+        self.X = dataframe[['Temperature', 'Tourists', 'SunnyDays']] 
+        self.y = dataframe['PredictedSales']   
 
     def training(self):
-        X = self.dataframe[['Temperature', 'Tourists', 'SunnyDays']] 
-        y = self.dataframe['PredictedSales']
-        self.model = LinearRegression()
-        self.model.fit(X, y)     # Training      
+        self.model.fit(self.X, self.y)  
 
     def predict(self):      
         path='Dataset\predict\linear-regression-withlib.csv'       

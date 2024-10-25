@@ -8,12 +8,14 @@ from utils.CSVHandler import CSVHandler
 
 class LogisticRegressionWLib:
     def __init__(self):
+        self.model = LogisticRegression()
+
         csv_handler = CSVHandler('Dataset\logistic-regression.csv')
         dataframe = csv_handler.read_csv()
         self.X = dataframe[['Gene1', 'Gene2', 'Gene3', 'Gene4', 'Gene5']]
         self.y = dataframe['5-year survival']
 
-        # Chia đôi dữ liệu 80% dùng để training 20% dùng để testing
+        # Chia dữ liệu làm 2 phần training và testing
         split_index = int(len(dataframe) * 0.5)
         self.Xtrain = self.X.iloc[:split_index]  
         self.ytrain = self.y.iloc[:split_index]  
@@ -21,11 +23,9 @@ class LogisticRegressionWLib:
         self.ytest = self.y.iloc[split_index:]   
 
     def training(self):
-        self.model = LogisticRegression()
         self.model.fit(self.Xtrain, self.ytrain)
 
     def trainingFullDataset(self):
-        self.model = LogisticRegression()
         self.model.fit(self.X, self.y)
 
     def testing(self):

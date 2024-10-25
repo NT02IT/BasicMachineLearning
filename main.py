@@ -1,7 +1,8 @@
 import os
 import time
 import numpy as np
-from utils.CSVHandler import CSVHandler
+from NaiveBayes.NaiveBayesNoLib import NaiveBayesNoLib
+from NaiveBayes.NaiveBayesWLib import NaiveBayesWLib 
 from LinearRegression.LinearRegressionNoLib import LinearRegressionNoLib as LinearNoLib
 from LinearRegression.LinearRegressionWLib import LinearRegressionWLib as LinearWithLib
 from LogisticRegression.LogisticRegressionNoLib import LogisticRegressionNoLib as LogisticNoLib
@@ -61,10 +62,40 @@ def runLogisticRegression():
     execution_time = end_time - start_time
     print(f"Thời gian chạy: {execution_time:.6f} giây")
 
+def runNaiveBayes():
+    print("\n===============")
+    print("= NAIVE BAYES =")
+    print("===============\n")
+
+    print("- Naive Bayes No Library")
+    start_time = time.time()
+    naiveBayesNoLib = NaiveBayesNoLib()
+    # naiveBayesNoLib.training()
+    naiveBayesNoLib.trainingFullDataset()
+    naiveBayesNoLib.testing()
+    naiveBayesNoLib.predict()
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"Thời gian chạy: {execution_time:.6f} giây")
+
+
+    print("\n- Naive Bayes With Library")
+    start_time = time.time()
+    naiveBayesWLib = NaiveBayesWLib()
+    # naiveBayesWLib.training()
+    naiveBayesWLib.trainingFullDataset()
+    naiveBayesWLib.testing()
+    naiveBayesWLib.predict()
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"Thời gian chạy: {execution_time:.6f} giây")
+
+
 def main():
     os.system('cls')
     # runLinearRegression()
-    runLogisticRegression()
+    # runLogisticRegression()
+    runNaiveBayes()
 
 if __name__ == "__main__":
     main()

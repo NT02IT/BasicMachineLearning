@@ -12,7 +12,7 @@ class LogisticRegressionNoLib:
         self.X = dataframe[['Gene1', 'Gene2', 'Gene3', 'Gene4', 'Gene5']]
         self.y = dataframe['5-year survival']
 
-        # Chia đôi dữ liệu 80% dùng để training 20% dùng để testing
+        # Chia dữ liệu làm 2 phần training và testing
         split_index = int(len(dataframe) * 0.5)
         self.Xtrain = self.X.iloc[:split_index]  
         self.ytrain = self.y.iloc[:split_index]  
