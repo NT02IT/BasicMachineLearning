@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.calibration import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
@@ -44,8 +44,14 @@ class NaiveBayesWLib:
         y_pred = self.model.predict(self.Xtest)
 
         # Tính độ chính xác so với kết quả thực tế
-        accuracy = accuracy_score(self.ytest, y_pred) * 100
-        print(f"Độ chính xác: {accuracy}%")       
+        accuracy = accuracy_score(self.ytest, y_pred) * 100         
+        # Ma trận nhầm lẫn
+        confusion = confusion_matrix(self.ytest, y_pred)  
+
+        # Xuất kết quả
+        print(f"Mẫu test: {self.Xtest.shape[0]}")
+        print(f"Độ chính xác: {accuracy}%")  
+        print(f"Confusion Matrix: \n{confusion}")     
 
     def predict(self):
         path='Dataset\predict\\naive-bayes-withlib.csv'       
