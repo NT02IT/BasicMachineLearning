@@ -4,8 +4,8 @@ import numpy as np
 class ValidateNoLib:
     def __init__(self, ytrue, ypred):
         # Giả sử ytrue là DataFrame, chọn cột đầu tiên
-        self.ytrue = ytrue.iloc[:, 0] if isinstance(ytrue, pd.DataFrame) else pd.Series(ytrue)
-        self.ypred = ypred.iloc[:, 0] if isinstance(ypred, pd.DataFrame) else pd.Series(ypred)
+        self.ytrue = ytrue.iloc[:, 0] if isinstance(ytrue, pd.DataFrame) else pd.Series(ytrue).reset_index(drop=True)
+        self.ypred = ypred.iloc[:, 0] if isinstance(ypred, pd.DataFrame) else pd.Series(ypred).reset_index(drop=True)
 
         # Lấy các lớp
         self.classes = np.unique(np.concatenate((self.ytrue, self.ypred)))
@@ -44,20 +44,3 @@ class ValidateNoLib:
         p = self.precision(label)
         r = self.recall(label)
         return (1 + beta**2) * (p * r) / (beta**2 * p + r) if (beta**2 * p + r) > 0 else 0.0
-
-
-# Ví dụ sử dụng
-ytrue_df = pd.DataFrame({'true_labels': [0, 1, 2, 2, 0, 1, 0, 2, 1, 3]})
-ypred = pd.DataFrame({'true_labels': [0, 0, 2, 1, 3, 1, 2, 2, 1, 3]})
-
-validator = Validate(ytrue_df, ypred)
-
-# Xuất các giá trị
-print("Số lượng mẫu:", validator.getSampleSize())
-print("Các phân lớp:", validator.getSampleClasses())
-print("Ma trận nhầm lẫn:\n", validator.confusionMatrix())
-print("Độ chính xác:", validator.accuracy())
-for label in range(4):  
-    print(f"Precision cho lớp {label}:", validator.precision(label))
-    print(f"Recall cho lớp {label}:", validator.recall(label))
-    print(f"F-score cho lớp {label}:", validator.fscore(label))
