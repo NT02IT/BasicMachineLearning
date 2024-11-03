@@ -1,6 +1,7 @@
 import os
 import time
 import numpy as np
+from Apriori.AprioriWLib import AprioriWLib
 from NaiveBayes.NaiveBayesNoLib import NaiveBayesNoLib
 from NaiveBayes.NaiveBayesWLib import NaiveBayesWLib 
 from LinearRegression.LinearRegressionNoLib import LinearRegressionNoLib as LinearNoLib
@@ -90,12 +91,26 @@ def runNaiveBayes():
     execution_time = end_time - start_time
     print(f"Thời gian chạy: {execution_time:.6f} giây")
 
+def runApriori():
+    print("\n===========")
+    print("= APRIORI =")
+    print("===========\n")
+
+    print("- Apriori With Library")
+    start_time = time.time()
+    aprioriWLib = AprioriWLib()
+    aprioriWLib.training()
+
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"Thời gian chạy: {execution_time:.6f} giây")
 
 def main():
     os.system('cls')
     # runLinearRegression()
     # runLogisticRegression()
-    runNaiveBayes()
+    # runNaiveBayes()
+    runApriori()
 
 if __name__ == "__main__":
     main()
