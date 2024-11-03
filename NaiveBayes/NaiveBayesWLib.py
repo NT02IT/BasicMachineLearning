@@ -55,25 +55,24 @@ class NaiveBayesWLib:
         # print(f"Confusion Matrix: \n{confusion}")     
 
         validateNoLib = ValidateNoLib(self.ytest, y_pred)
-        print("Số lượng mẫu:", validateNoLib.getSampleSize())
+        print("Số lượng mẫu test:", validateNoLib.getSampleSize())
         print("Các phân lớp:", validateNoLib.getSampleClasses())
         print("Ma trận nhầm lẫn:\n", validateNoLib.confusionMatrix())
         print("Độ chính xác:", validateNoLib.accuracy())
-        for label in range(len(validateNoLib.getSampleClasses())):  
-            print(f"Precision cho lớp {label}:", validateNoLib.precision(label))
-            print(f"Recall cho lớp {label}:", validateNoLib.recall(label))
-            print(f"F-score cho lớp {label}:", validateNoLib.fscore(label))
+        # for label in range(len(validateNoLib.getSampleClasses())):  
+        #     print(f"Precision cho lớp {label}:", validateNoLib.precision(label))
+        #     print(f"Recall cho lớp {label}:", validateNoLib.recall(label))
+        #     print(f"F-score cho lớp {label}:", validateNoLib.fscore(label))
 
     def predict(self):
         path='Dataset\predict\\naive-bayes-withlib.csv'       
         csv_handler = CSVHandler(path)
         predictDataframe = csv_handler.read_csv()
 
-        # ENCODE DATA Chuyển từ chữ sang số
-        label_encoder = LabelEncoder()
-        columns = ['Size','Number','Thickness','Lung Cancer']
-        for col in columns:
-            predictDataframe[col] = label_encoder.fit_transform(predictDataframe[col])
+        # Lặp qua từng cột và dùng label_encoders để mã hóa
+        for col in self.label_encoders:
+            if col in predictDataframe.columns:
+                predictDataframe[col] = self.label_encoders[col].transform(predictDataframe[col])
 
         X = predictDataframe[['Size','Number','Thickness']]
         predictDataframe['Lung Cancer'] = self.model.predict(X)

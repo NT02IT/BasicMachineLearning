@@ -1,11 +1,11 @@
 Size,Number,Thickness,Lung Cancer
-none,scale-4,light,
-large,scale-1,light,
-small,scale-2,grey,
-median,scale-5,dark,
-none,scale-1,dark,
-ex-large,scale-3,light,
-none,scale-5,dark,
-small,scale-1,grey,
-median,scale-4,light,
-small,scale-2,grey,
+none,scale-4,light,negative
+large,scale-1,light,negative
+small,scale-2,grey,stage-2
+median,scale-5,dark,stage-3
+none,scale-1,dark,stage-3
+ex-large,scale-3,light,stage-1
+none,scale-5,dark,stage-2
+small,scale-1,grey,stage-2
+median,scale-4,light,negative
+small,scale-2,grey,stage-2
