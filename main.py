@@ -2,12 +2,14 @@ import os
 import time
 import numpy as np
 from Apriori.AprioriWLib import AprioriWLib
+from MinMaxNormalization.MinMaxScalerNoLib import MinMaxScalerNoLib
 from NaiveBayes.NaiveBayesNoLib import NaiveBayesNoLib
 from NaiveBayes.NaiveBayesWLib import NaiveBayesWLib 
 from LinearRegression.LinearRegressionNoLib import LinearRegressionNoLib as LinearNoLib
 from LinearRegression.LinearRegressionWLib import LinearRegressionWLib as LinearWithLib
 from LogisticRegression.LogisticRegressionNoLib import LogisticRegressionNoLib as LogisticNoLib
 from LogisticRegression.LogisticRegresstionWLib import LogisticRegressionWLib as LogisticWithLib
+from MinMaxNormalization.MinMaxScalerWLib import MinMaxScalerWLib 
 
 def runLinearRegression():
     print("\n=====================")
@@ -100,17 +102,39 @@ def runApriori():
     start_time = time.time()
     aprioriWLib = AprioriWLib()
     aprioriWLib.training()
-
     end_time = time.time()
     execution_time = end_time - start_time
     print(f"Thời gian chạy: {execution_time:.6f} giây")
+
+def runMinMaxNormalization():
+    print("=========================")
+    print("= MIN-MAX NORMALIZATION =")
+    print("=========================")
+
+    print("- Min-Max Normalization With Library")
+    start_time = time.time()
+    minmaxScalerWLib = MinMaxScalerWLib()
+    minmaxScalerWLib.Normalization()
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"Thời gian chạy: {execution_time:.6f} giây")
+
+    print("- Min-Max Normalization No Library")
+    start_time = time.time()
+    minmaxScalerNoLib = MinMaxScalerNoLib()
+    minmaxScalerNoLib.Normalization()
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"Thời gian chạy: {execution_time:.6f} giây")
+
 
 def main():
     os.system('cls')
     # runLinearRegression()
     # runLogisticRegression()
     # runNaiveBayes()
-    runApriori()
+    # runApriori()
+    runMinMaxNormalization()
 
 if __name__ == "__main__":
     main()
