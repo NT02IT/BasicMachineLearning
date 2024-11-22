@@ -12,8 +12,6 @@ from utils.CSVHandler import CSVHandler
 
 class UseNaive:
     def __init__(self, datasetURL, train_size=0.5):
-        self.model = GaussianNB()
-
         csv_handler = CSVHandler(datasetURL)
         dataframe = csv_handler.read_csv()   
 
@@ -79,7 +77,7 @@ class UseNaive:
         print("Số lượng mẫu test:", validateNoLib.getSampleSize())
         print("Các phân lớp:", validateNoLib.getSampleClasses())
         print("Ma trận nhầm lẫn:\n", validateNoLib.confusionMatrix())
-        print(f"Độ chính xác: {round(validateNoLib.accuracy(),2)}%")
+        print(f"Độ chính xác: {round(validateNoLib.accuracy()*100,2)}%")
         # for label in range(len(validateNoLib.getSampleClasses())):  
         #     print(f"Precision cho lớp {label}:", validateNoLib.precision(label))
         #     print(f"Recall cho lớp {label}:", validateNoLib.recall(label))

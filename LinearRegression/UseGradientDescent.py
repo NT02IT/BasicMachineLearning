@@ -45,7 +45,7 @@ class UseGradientDescent:
             self.weights -= self.learning_rate * gradient  # Cập nhật trọng số
 
             # Tính MSE cho mỗi lần lặp
-            loss = self.mean_squared_error(self.y_train, predictions)
+            loss = self._meanSquaredError(self.y_train, predictions)
             loss_values.append(loss)
 
             threshold = 1e+5  # Ngưỡng thay đổi loss
@@ -61,11 +61,22 @@ class UseGradientDescent:
     def predict(self, data_input):
         # Dự đoán giá trị đầu ra cho dữ liệu đầu vào
         return data_input.dot(self.weights)
+    
+    def predictFor(self, data_input):
+        data_input = np.array(data_input)
+        # Chuyển data_input thành vector hàng (1, n)
+        if data_input.ndim == 1:
+            data_input = data_input.reshape(1, -1)
+        # Thêm cột hệ số tự do (bias term) vào đầu mảng
+        data_input = np.c_[np.ones(data_input.shape[0]), data_input]
+        # Dự đoán y = X * theta
+        y_pred = data_input.dot(self.weights)
+        return y_pred
 
     def test(self):
         # Dự đoán trên tập kiểm tra và tính MSE
         predictions = self.predict(self.X_test)
-        loss = self.mean_squared_error(self.y_test, predictions)
+        loss = self._meanSquaredError(self.y_test, predictions)
         return loss
 
     def getModelInfo(self):
@@ -82,7 +93,7 @@ class UseGradientDescent:
         plt.title('Sự thay đổi của MSE theo các vòng lặp Gradient Descent')
         plt.show()
 
-    def mean_squared_error(self, y_true, y_pred):
+    def _meanSquaredError(self, y_true, y_pred):
         errors = y_true - y_pred   
         errors = np.clip(errors, -1e10, 1e10)  # Giới hạn giá trị lỗi trong phạm vi hợp lý tránh lỗi tràn số  
         squared_errors = errors ** 2    # Tính bình phương của các lỗi     

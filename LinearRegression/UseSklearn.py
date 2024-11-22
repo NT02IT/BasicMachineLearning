@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
@@ -32,6 +33,14 @@ class UseSklearn:
         self.model.fit(self.X_train, self.y_train)  
 
     def predict(self, data_input):    
+        y_pred = self.model.predict(data_input)
+        return y_pred
+    
+    def predictFor(self, data_input):
+        data_input = np.array(data_input)
+        # Chuyển data_input thành vector hàng (1, n)
+        if data_input.ndim == 1:
+            data_input = data_input.reshape(1, -1)
         y_pred = self.model.predict(data_input)
         return y_pred
     

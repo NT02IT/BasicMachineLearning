@@ -31,10 +31,20 @@ class UseMath:
         # Áp dụng công thức Normal Equation để tìm hệ số
         # theta = (X.T * X)^-1 * X.T * y
         X_transpose = self.X_train.T  # Chuyển vị của X
-        theta = np.linalg.inv(X_transpose.dot(self.X_train)).dot(X_transpose).dot(self.y_train)
-        self.theta = theta
+        self.theta = np.linalg.inv(X_transpose.dot(self.X_train)).dot(X_transpose).dot(self.y_train)
 
     def predict(self, data_input):
+        # Dự đoán y = X * theta
+        y_pred = data_input.dot(self.theta)
+        return y_pred
+    
+    def predictFor(self, data_input):
+        data_input = np.array(data_input)
+        # Chuyển data_input thành vector hàng (1, n)
+        if data_input.ndim == 1:
+            data_input = data_input.reshape(1, -1)
+        # Thêm cột hệ số tự do (bias term) vào đầu mảng
+        data_input = np.c_[np.ones(data_input.shape[0]), data_input]
         # Dự đoán y = X * theta
         y_pred = data_input.dot(self.theta)
         return y_pred
