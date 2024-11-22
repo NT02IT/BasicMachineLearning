@@ -13,7 +13,7 @@ python -m venv venv
 Sau khi môi trường ảo được tạo, bạn cần kích hoạt nó:
 
   ```bash
-  myenv\Scripts\activate
+  venv\Scripts\activate
   ```
 
 Khi kích hoạt thành công, bạn sẽ thấy tên của môi trường ảo xuất hiện trước dấu nhắc lệnh trong terminal, ví dụ: `(myenv)`.

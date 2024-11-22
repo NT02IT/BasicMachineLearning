@@ -7,10 +7,10 @@ from mlxtend.preprocessing import TransactionEncoder # Chuyển đổi danh sác
 
 class AprioriWLib:
     def __init__(self):
-        csv_handler = CSVHandler('Dataset\\apriori.csv')
+        csv_handler = CSVHandler('datasets\\apriori\\apriori.csv')
         dataframe = csv_handler.read_csv()   
         
-        # Chuyển đổi dữ liệu sang dạng giỏ hàng
+        # Chuyển đổi dữ liệu sang dạng transaction
         self.transactions = dataframe.groupby('InvoiceNo')['StockCode'].apply(list).tolist()        
 
     def training(self):
