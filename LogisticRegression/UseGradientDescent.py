@@ -25,7 +25,7 @@ class UseGradientDescent:
         self.y_test = y.iloc[split_index:]   
 
     def training(self):
-        self._gradient_descent(self.X_train, self.y_train)
+        return self._gradient_descent(self.X_train, self.y_train)
 
     def predict(self, data_input):
         linear_model = np.dot(data_input, self.weights) + self.bias
@@ -48,7 +48,7 @@ class UseGradientDescent:
         print("Mẫu training:", len(self.y_train))
         print("Intercept (hệ số tự do):", self.bias)
         print("Coefficients (hệ số của các biến độc lập):", self.weights)
-        self.plot_loss(self.cost_values)
+        # self.plot_loss(self.cost_values)
 
     def _gradient_descent(self, X, y, learning_rate=1e-5, iterations=1500):
         m, n = X.shape  # m: số lượng mẫu, n: số lượng đặc trưng
@@ -81,7 +81,8 @@ class UseGradientDescent:
                     print(f"Dừng tại vòng lặp {i} vì loss không thay đổi đáng kể")
                     break
             else:
-                count_patience = 0            
+                count_patience = 0   
+        return self.cost_values
     
     def _sigmoid(self, z):
         # Giới hạn ở -709 và 709 để tránh khi e mũ quá lớn hoặc quá nhỏ sẽ gây lỗi tràn số

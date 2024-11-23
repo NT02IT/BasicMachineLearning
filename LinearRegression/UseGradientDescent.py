@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from utils.CSVHandler import CSVHandler
 
 class UseGradientDescent:
-    def __init__(self, datasetURL, train_size=0.5, learning_rate=1e-4, iterations=1500):
+    def __init__(self, datasetURL, train_size=0.5, learning_rate=1e-4, iterations=1500): # Thử thêm với learning_rate=1e-4
         csv_handler = CSVHandler(datasetURL)
         dataframe = csv_handler.read_csv()
 
