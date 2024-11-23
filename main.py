@@ -72,9 +72,10 @@ def runLinearRegression():
     formatted_number = "{:.4e}".format(loss)
     print("MSE:", formatted_number)        
     print(f"Thời gian: {execution_time:.6f} giây")
-    print(f"Dự đoán: {linearUseGradientDescent.predictFor([1, 2, 3])}")    
-    linearUseGradientDescent.plot_loss(loss_values)
+    print(f"Dự đoán: {linearUseGradientDescent.predictFor([1, 2, 3])}")   
 
+    linearUseSklearn.plot_loss() 
+    linearUseGradientDescent.plot_loss(loss_values)
 
 def runLogisticRegression():
     print("\n=======================")
@@ -220,8 +221,8 @@ def runNormalization():
 
 def main():
     os.system('cls')
-    # runLinearRegression()
-    runLogisticRegression()
+    runLinearRegression()
+    # runLogisticRegression()
     # runNaiveBayes()
     # runApriori()
     # runNormalization()
