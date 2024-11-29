@@ -17,7 +17,7 @@ class UseSklearn:
         csv_handler = CSVHandler(datasetURL)
         dataframe = csv_handler.read_csv()   
 
-        dataframe, label_encoders = Normalization.encode_dataframe(dataframe)
+        dataframe, self.label_encoders = Normalization.encode_dataframe(dataframe)
             
         X = dataframe.iloc[:, :-1]     # Chọn tất cả các hàng và cột trừ cột cuối cùng
         y = dataframe.iloc[:, -1]      # Chọn cột cuối cùng

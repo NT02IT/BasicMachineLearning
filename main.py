@@ -11,6 +11,7 @@ from LogisticRegression.UseGradientDescent import UseGradientDescent as Logistic
 from NaiveBayes.UseSklearn import UseSklearn as NaiveBayesUseSklearn
 from NaiveBayes.UseNaive import UseNaive as NaiveBayesUseNaive
 from Normalization.Normalization import Normalization
+from KNNClassifier.UseSklearn import UseSklearn as KNNUseSklearn
 from utils.CSVHandler import CSVHandler
 
 def runLinearRegression():
@@ -218,14 +219,33 @@ def runNormalization():
     csvHandler.write_csv(df_normalized_nolib, path)
     os.startfile(path)
 
+def runKNN():
+    print("\n==================")
+    print("= KNN Classifier =")
+    print("==================\n")
+    datasetURL = 'datasets\\knn\\bank.csv'
+
+    # KNN Use Sklearn
+    print("- KNN Use Sklearn -")
+    start_time = time.time()
+
+    kNNUseSklearn = KNNUseSklearn(datasetURL, 0.5)
+    mse_values, k_values = kNNUseSklearn.train()
+    end_time = time.time()
+    execution_time = end_time - start_time
+
+    kNNUseSklearn.test()
+    print(f"Thời gian: {execution_time:.6f} giây")
+    # print(f"Dự đoán: {linearUseSklearn.predictFor([1, 2, 3])}")
 
 def main():
     os.system('cls')
-    runLinearRegression()
+    # runLinearRegression()
     # runLogisticRegression()
     # runNaiveBayes()
     # runApriori()
     # runNormalization()
+    runKNN()
 
 if __name__ == "__main__":
     main()
