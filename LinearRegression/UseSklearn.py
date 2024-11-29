@@ -9,7 +9,7 @@ import os
 
 class UseSklearn:
     def __init__(self, datasetURL, train_size=0.5):
-        self.model = SGDRegressor(max_iter=1500, warm_start=True, learning_rate="constant", eta0=1e-4, random_state=27)
+        self.model = SGDRegressor(max_iter=1500, warm_start=True, learning_rate="constant", eta0=1e-8, random_state=27)
         # Lists để lưu loss
         self.iterations = []
         self.loss_values = []
@@ -52,6 +52,7 @@ class UseSklearn:
                     break
             else:
                 count_patience = 0
+        return self.loss_values
 
     def predict(self, data_input):    
         self.y_pred = self.model.predict(data_input)

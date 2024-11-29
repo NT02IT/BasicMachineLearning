@@ -1,5 +1,6 @@
 import os
 import time
+from matplotlib import pyplot as plt
 import numpy as np
 import pandas as pd
 from Apriori.AprioriWLib import AprioriWLib
@@ -24,8 +25,8 @@ def runLinearRegression():
     print("- Linear Regression Use Sklearn -")
     start_time = time.time()
     
-    linearUseSklearn = LinearUseSklearn(datasetURL, 0.5)
-    linearUseSklearn.train()
+    linearUseSklearn = LinearUseSklearn(datasetURL, 0.5)    
+    loss_values_sklearn = linearUseSklearn.train()
     end_time = time.time()
     execution_time = end_time - start_time
 
@@ -57,7 +58,7 @@ def runLinearRegression():
     start_time = time.time()
     
     linearUseGradientDescent = LinearUseGradientDescent(datasetURL, 0.5)
-    loss_values = linearUseGradientDescent.train()
+    loss_values_gd = linearUseGradientDescent.train()
     end_time = time.time()
     execution_time = end_time - start_time
 
@@ -75,8 +76,18 @@ def runLinearRegression():
     print(f"Thời gian: {execution_time:.6f} giây")
     print(f"Dự đoán: {linearUseGradientDescent.predictFor([1, 2, 3])}")   
 
-    linearUseSklearn.plot_loss() 
-    linearUseGradientDescent.plot_loss(loss_values)
+    # linearUseSklearn.plot_loss() 
+    # linearUseGradientDescent.plot_loss(loss_values)
+    # Vẽ biểu đồ hàm loss qua các vòng lặp của cả 2 pp
+    plt.figure(figsize=(10, 6))
+    plt.plot(range(len(loss_values_sklearn)), loss_values_sklearn, label='WithLib')
+    plt.plot(range(len(loss_values_gd)), loss_values_gd, label='NoLib')
+    plt.xlabel('Số lần lặp (Iterations)')
+    plt.ylabel('Loss (MSE)')
+    plt.title('Sự thay đổi của MSE theo các vòng lặp Gradient Descent')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
 def runLogisticRegression():
     print("\n=======================")
@@ -88,7 +99,7 @@ def runLogisticRegression():
     print("- Logistic Regression Use Sklearn -")
     start_time = time.time()
     logisticNoLib = LogisticUseSklearn(datasetURL)
-    logisticNoLib.training()
+    loss_values_sklearn = logisticNoLib.training()
     end_time = time.time()
     execution_time = end_time - start_time
 
@@ -101,13 +112,24 @@ def runLogisticRegression():
     print("- Logistic Regression Use Gradient Descent -")
     start_time = time.time()
     logisticUseGradientDescent = LogisticUseGradientDescent(datasetURL)
-    logisticUseGradientDescent.training()
+    loss_values_gd = logisticUseGradientDescent.training()
     end_time = time.time()
     execution_time = end_time - start_time
 
     logisticUseGradientDescent.testing()    
     print(f"Thời gian chạy: {execution_time:.6f} giây")
     logisticUseGradientDescent.getModelInfo()
+
+    # Vẽ biểu đồ hàm loss qua các vòng lặp của cả 2 pp
+    plt.figure(figsize=(10, 6))
+    plt.plot(range(len(loss_values_sklearn)), loss_values_sklearn, label='WithLib')
+    plt.plot(range(len(loss_values_gd)), loss_values_gd, label='NoLib')
+    plt.xlabel('Số lần lặp (Iterations)')
+    plt.ylabel('Loss (MSE)')
+    plt.title('Sự thay đổi của MSE theo các vòng lặp Gradient Descent')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
 def runNaiveBayes():
     print("\n===============")
@@ -241,7 +263,6 @@ def runKNN():
 def main():
     os.system('cls')
     # runLinearRegression()
-    # runLogisticRegression()
     # runNaiveBayes()
     # runApriori()
     # runNormalization()
