@@ -51,7 +51,7 @@ class UseSklearn:
 
         # Tìm giá trị k tối ưu
         optimal_k = self.k_values[self.mse_values.index(min(self.mse_values))]
-        print(f'\nOptimal k: {optimal_k}, Minimum MSE: {min(self.mse_values):.4f}')
+        print(f'\r\nOptimal k: {optimal_k}, Minimum MSE: {min(self.mse_values):.4f}', end='', flush=True)
         self.model = KNeighborsClassifier(optimal_k)
         self.model.fit(self.X_train, self.y_train)
 

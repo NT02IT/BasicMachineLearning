@@ -266,8 +266,8 @@ def runKNN():
     print("\n- KNN dont use library -")
     start_time = time.time()
 
-    kNNWithNoLib = KNNWithNoLib(datasetURL, 0.9)
-    k_min_WithNoLib, k_max_WithNoLib = 9, 10
+    kNNWithNoLib = KNNWithNoLib(datasetURL, 0.5)
+    k_min_WithNoLib, k_max_WithNoLib = 1, 30
     mse_values_WithNoLib, k_values_WithNoLib = kNNWithNoLib.train(k_min_WithNoLib, k_max_WithNoLib)
     end_time = time.time()
     execution_time = end_time - start_time
