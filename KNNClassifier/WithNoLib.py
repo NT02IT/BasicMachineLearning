@@ -28,11 +28,6 @@ class WithNoLib:
         self.X_test = X.iloc[split_index:]   
         self.y_test = y.iloc[split_index:]  
 
-        self.trainSet = self.dataframe[:split_index]
-        self.testSet = self.dataframe[split_index:]
-        self.trainRows, self.trainColumns = self.trainSet.shape
-        self.testRows, self.testColumns = self.testSet.shape
-
         self.mse_values = []
         self.k_values = []
 
@@ -80,7 +75,7 @@ class WithNoLib:
         # Tìm giá trị k tối ưu
         if None not in self.mse_values:
             self.optimal_k = self.k_values[np.argmin(self.mse_values)]
-            print(f'\r\nOptimal k: {self.optimal_k}, Minimum MSE: {min(self.mse_values):.4f}', end='', flush=True)
+            print(f'\nOptimal k: {self.optimal_k}, Minimum MSE: {min(self.mse_values):.4f}')
 
         return self.mse_values, self.k_values
     
@@ -131,7 +126,7 @@ class WithNoLib:
         y_pred = self.predict(self.X_train, self.y_train, self.X_test, self.optimal_k)
             
         validateNoLib = ValidateNoLib(self.y_test, y_pred)
-        print("\rSố lượng mẫu test:", validateNoLib.getSampleSize(), end='', flush=True)
+        print("Số lượng mẫu test:", validateNoLib.getSampleSize())
         print("Các phân lớp:", validateNoLib.getSampleClasses())
         print("Ma trận nhầm lẫn:\n", validateNoLib.confusionMatrix())
         print(f"Độ chính xác: {round(validateNoLib.accuracy()*100,2)}%")
