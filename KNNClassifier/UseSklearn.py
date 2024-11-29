@@ -32,11 +32,12 @@ class UseSklearn:
         # print("Sample X_train:\n", self.X_train.head())
         # print("Sample y_train:\n", self.y_train.head())
 
-    def train(self, max_k=30):
+    def train(self, min_k=1, max_k=30):
         self.mse_values = []
-        self.k_values = range(1, max_k + 1)
+        self.k_values = range(min_k, max_k + 1)
 
         for k in self.k_values:
+            print(f"\rTraining with k = {k}...", end='', flush=True)
             # Tạo model KNN với k láng giềng
             self.model = KNeighborsClassifier(n_neighbors=k)
             self.model.fit(self.X_train, self.y_train)
@@ -50,7 +51,7 @@ class UseSklearn:
 
         # Tìm giá trị k tối ưu
         optimal_k = self.k_values[self.mse_values.index(min(self.mse_values))]
-        print(f'Optimal k: {optimal_k}, Minimum MSE: {min(self.mse_values):.4f}')
+        print(f'\nOptimal k: {optimal_k}, Minimum MSE: {min(self.mse_values):.4f}')
         self.model = KNeighborsClassifier(optimal_k)
         self.model.fit(self.X_train, self.y_train)
 

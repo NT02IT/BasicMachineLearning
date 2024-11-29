@@ -13,6 +13,7 @@ from NaiveBayes.UseSklearn import UseSklearn as NaiveBayesUseSklearn
 from NaiveBayes.UseNaive import UseNaive as NaiveBayesUseNaive
 from Normalization.Normalization import Normalization
 from KNNClassifier.UseSklearn import UseSklearn as KNNUseSklearn
+from KNNClassifier.WithNoLib import WithNoLib as KNNWithNoLib
 from utils.CSVHandler import CSVHandler
 
 def runLinearRegression():
@@ -252,7 +253,8 @@ def runKNN():
     start_time = time.time()
 
     kNNUseSklearn = KNNUseSklearn(datasetURL, 0.5)
-    mse_values, k_values = kNNUseSklearn.train()
+    k_min_UseSklearn, k_max_UseSklearn = 1, 30
+    mse_values_UseSklearn, k_values_UseSklearn = kNNUseSklearn.train(k_min_UseSklearn, k_max_UseSklearn)
     end_time = time.time()
     execution_time = end_time - start_time
 
@@ -260,9 +262,35 @@ def runKNN():
     print(f"Thời gian: {execution_time:.6f} giây")
     # print(f"Dự đoán: {linearUseSklearn.predictFor([1, 2, 3])}")
 
+    # KNN Dont use Libraries
+    print("\n- KNN dont use library -")
+    start_time = time.time()
+
+    kNNWithNoLib = KNNWithNoLib(datasetURL, 0.9)
+    k_min_WithNoLib, k_max_WithNoLib = 9, 10
+    mse_values_WithNoLib, k_values_WithNoLib = kNNWithNoLib.train(k_min_WithNoLib, k_max_WithNoLib)
+    end_time = time.time()
+    execution_time = end_time - start_time
+
+    kNNWithNoLib.test()
+    print(f"Thời gian: {execution_time:.6f} giây")
+
+
+    # Vẽ biểu đồ hàm mse tìm K tối ưu
+    plt.figure(figsize=(10, 6))
+    plt.plot(range(k_min_UseSklearn, k_max_UseSklearn+1), mse_values_UseSklearn, label='WithLib')
+    plt.plot(range(k_min_WithNoLib, k_max_WithNoLib+1), mse_values_WithNoLib, label='NoLib')
+    plt.xlabel('Giá trị K')
+    plt.ylabel('MSE')
+    plt.title('Sự thay đổi của MSE theo các vòng lặp tìm K tối ưu')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
 def main():
     os.system('cls')
     # runLinearRegression()
+    # runLogisticRegression()
     # runNaiveBayes()
     # runApriori()
     # runNormalization()
