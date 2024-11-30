@@ -4,18 +4,22 @@ import pandas as pd
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import SGDRegressor
+from Normalization.Normalization import Normalization
 from utils.CSVHandler import CSVHandler
 import os
 
 class UseSklearn:
     def __init__(self, datasetURL, train_size=0.5):
-        self.model = SGDRegressor(max_iter=1500, warm_start=True, learning_rate="constant", eta0=1e-8, random_state=27)
+        self.model = SGDRegressor(max_iter=1500, warm_start=True, learning_rate="constant", eta0=0.001, random_state=27)
         # Lists để lưu loss
         self.iterations = []
         self.loss_values = []
+        self.loss_values_validate = []
 
         csv_handler = CSVHandler(datasetURL)
-        dataframe = csv_handler.read_csv()   
+        dataframe = csv_handler.read_csv()  
+
+        dataframe = Normalization.minMaxNormalizationWlib(dataframe, 0, 1) 
 
         # Chuẩn hóa dữ liệu từ string sang số "1,2" -> 1.2
         for col in dataframe.columns:
@@ -38,9 +42,15 @@ class UseSklearn:
         count_patience = 0
         for i in range(self.model.max_iter):
             self.model.partial_fit(self.X_train, self.y_train)
+
             y_pred = self.model.predict(self.X_train)
+            y_pred_validate = self.model.predict(self.X_test)
+
             loss = mean_squared_error(self.y_train, y_pred)
+            loss_validate = mean_squared_error(self.y_test, y_pred_validate)
+
             self.loss_values.append(loss)
+            self.loss_values_validate.append(loss_validate)
             self.iterations.append(i + 1)
 
             # Kiểm tra dừng sớm
@@ -52,7 +62,7 @@ class UseSklearn:
                     break
             else:
                 count_patience = 0
-        return self.loss_values
+        return self.loss_values, self.loss_values_validate
 
     def predict(self, data_input):    
         self.y_pred = self.model.predict(data_input)

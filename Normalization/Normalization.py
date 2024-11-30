@@ -16,6 +16,16 @@ class Normalization:
         
         return df, label_encoders
     
+    @staticmethod
+    def encode_dataframe_with_encoders(df, label_encoders):
+        for col in df.columns:
+            if col in label_encoders:  # Kiểm tra xem cột có trong danh sách LabelEncoder không
+                encoder = label_encoders[col]
+                if df[col].dtype == 'object':  # Nếu cột là kiểu chuỗi
+                    df[col] = encoder.transform(df[col])  # Áp dụng transform
+        return df
+
+    
     # DECODE DATA Chuyển từ số về lại chữ ban đầu
     @staticmethod
     def decode_dataframe(df, label_encoders):
@@ -28,11 +38,13 @@ class Normalization:
     # MinMax Normalization With Library
     @staticmethod
     def minMaxNormalizationWlib(df, new_min, new_max):
-        df_normalized = df.copy()
-        scaler = MinMaxScaler(feature_range=(new_min, new_max))        
         for col in df.columns:
             if df[col].dtype in ['int64', 'float64']:
-                df_normalized[col] = scaler.fit_transform(df[[col]])        
+                df_normalized = df.copy()
+                scaler = MinMaxScaler(feature_range=(new_min, new_max))        
+                for col in df.columns:
+                    if df[col].dtype in ['int64', 'float64']:
+                        df_normalized[col] = scaler.fit_transform(df[[col]])        
         return df_normalized
     
     # MinMax Normalization No Library

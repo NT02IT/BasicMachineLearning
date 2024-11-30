@@ -20,14 +20,14 @@ def runLinearRegression():
     print("\n=====================")
     print("= LINEAR REGRESSION =")
     print("=====================\n")
-    datasetURL = 'datasets\linear-regression\linear-regression.csv'
+    datasetURL = 'datasets\linear-regression\Folds5x2_pp.csv'
 
     # Linear Regression Use Sklearn
     print("- Linear Regression Use Sklearn -")
     start_time = time.time()
     
     linearUseSklearn = LinearUseSklearn(datasetURL, 0.5)    
-    loss_values_sklearn = linearUseSklearn.train()
+    loss_values_sklearn, loss_values_validate_sklearn = linearUseSklearn.train()
     end_time = time.time()
     execution_time = end_time - start_time
 
@@ -35,7 +35,7 @@ def runLinearRegression():
     loss = linearUseSklearn.test()
     print("MSE:", round(loss, 4))
     print(f"Thời gian: {execution_time:.6f} giây")
-    print(f"Dự đoán: {linearUseSklearn.predictFor([1, 2, 3])}")
+    # print(f"Dự đoán: {linearUseSklearn.predictFor([1, 2, 3])}")
 
     # Linear Regression Use Math
     print("\n")
@@ -51,7 +51,7 @@ def runLinearRegression():
     formatted_number = "{:.4e}".format(loss)
     print("MSE:", formatted_number)        
     print(f"Thời gian: {execution_time:.6f} giây")
-    print(f"Dự đoán: {linearUseMath.predictFor([1, 2, 3])}")
+    # print(f"Dự đoán: {linearUseMath.predictFor([1, 2, 3])}")
 
     # Linear Regression Use Gradient Descent
     print("\n")
@@ -59,7 +59,7 @@ def runLinearRegression():
     start_time = time.time()
     
     linearUseGradientDescent = LinearUseGradientDescent(datasetURL, 0.5)
-    loss_values_gd = linearUseGradientDescent.train()
+    loss_values_gd, loss_values_validate_gd = linearUseGradientDescent.train()
     end_time = time.time()
     execution_time = end_time - start_time
 
@@ -75,14 +75,16 @@ def runLinearRegression():
     formatted_number = "{:.4e}".format(loss)
     print("MSE:", formatted_number)        
     print(f"Thời gian: {execution_time:.6f} giây")
-    print(f"Dự đoán: {linearUseGradientDescent.predictFor([1, 2, 3])}")   
+    # print(f"Dự đoán: {linearUseGradientDescent.predictFor([1, 2, 3])}")   
 
     # linearUseSklearn.plot_loss() 
     # linearUseGradientDescent.plot_loss(loss_values)
     # Vẽ biểu đồ hàm loss qua các vòng lặp của cả 2 pp
     plt.figure(figsize=(10, 6))
-    plt.plot(range(len(loss_values_sklearn)), loss_values_sklearn, label='WithLib')
-    plt.plot(range(len(loss_values_gd)), loss_values_gd, label='NoLib')
+    # plt.plot(range(len(loss_values_sklearn)), np.array(loss_values_sklearn), label='WithLib') 
+    # plt.plot(range(len(loss_values_validate_sklearn)), np.array(loss_values_validate_sklearn), label='WithLib - Validate') 
+    plt.plot(range(len(loss_values_gd)), np.array(loss_values_gd), label='NoLib')
+    plt.plot(range(len(loss_values_validate_gd)), np.array(loss_values_validate_gd), label='NoLib - Validate')
     plt.xlabel('Số lần lặp (Iterations)')
     plt.ylabel('Loss (MSE)')
     plt.title('Sự thay đổi của MSE theo các vòng lặp Gradient Descent')
@@ -100,31 +102,35 @@ def runLogisticRegression():
     print("- Logistic Regression Use Sklearn -")
     start_time = time.time()
     logisticNoLib = LogisticUseSklearn(datasetURL)
-    loss_values_sklearn = logisticNoLib.training()
+    loss_values_sklearn, loss_history_validate_sklearn = logisticNoLib.training()
     end_time = time.time()
     execution_time = end_time - start_time
 
     logisticNoLib.testing()    
     print(f"Thời gian chạy: {execution_time:.6f} giây")
     logisticNoLib.getModelInfo()
+    print(f"Dự đoán: {logisticNoLib.predictFor([53, 'technician', 'married', 'unknown', 'no', 'no', 'no', 'cellular', 'nov', 'fri', 138, 1, 999, 0, 'nonexistent', -0.1, 93.2, -42, '4,021', 5195.8])}")
 
     # Logistic Regression Use Gradient Descent
     print("\n")
     print("- Logistic Regression Use Gradient Descent -")
     start_time = time.time()
     logisticUseGradientDescent = LogisticUseGradientDescent(datasetURL)
-    loss_values_gd = logisticUseGradientDescent.training()
+    loss_values_gd, loss_values_validate_gd = logisticUseGradientDescent.training()
     end_time = time.time()
     execution_time = end_time - start_time
 
     logisticUseGradientDescent.testing()    
     print(f"Thời gian chạy: {execution_time:.6f} giây")
     logisticUseGradientDescent.getModelInfo()
+    print(f"Dự đoán: {logisticUseGradientDescent.predictFor([53, 'technician', 'married', 'unknown', 'no', 'no', 'no', 'cellular', 'nov', 'fri', 138, 1, 999, 0, 'nonexistent', -0.1, 93.2, -42, '4,021', 5195.8])}")
 
     # Vẽ biểu đồ hàm loss qua các vòng lặp của cả 2 pp
     plt.figure(figsize=(10, 6))
     plt.plot(range(len(loss_values_sklearn)), loss_values_sklearn, label='WithLib')
+    plt.plot(range(len(loss_history_validate_sklearn)), loss_history_validate_sklearn, label='WithLib - Validate')
     plt.plot(range(len(loss_values_gd)), loss_values_gd, label='NoLib')
+    plt.plot(range(len(loss_values_validate_gd)), loss_values_validate_gd, label='NoLib - Validate')
     plt.xlabel('Số lần lặp (Iterations)')
     plt.ylabel('Loss (MSE)')
     plt.title('Sự thay đổi của MSE theo các vòng lặp Gradient Descent')

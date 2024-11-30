@@ -12,7 +12,15 @@ class UseGradientDescent:
         csv_handler = CSVHandler(datasetURL)
         dataframe = csv_handler.read_csv()   
 
-        dataframe, label_encoders = Normalization.encode_dataframe(dataframe)
+        # Chuẩn hóa dữ liệu từ string sang số "1,2" -> 1.2
+        pattern = r"^\d,\d$" 
+        for col in dataframe.columns:
+            if dataframe[col].dtype not in ['int64', 'float64']:
+                if dataframe[col].str.match(pattern).all():
+                    dataframe[col] = dataframe[col].apply(lambda x: float(x.replace(',', '.')) if isinstance(x, str) else x)
+
+        dataframe = Normalization.minMaxNormalizationNolib(dataframe, 0, 1)
+        dataframe, self.label_encoders = Normalization.encode_dataframe(dataframe)
             
         X = dataframe.iloc[:, :-1]     # Chọn tất cả các hàng và cột trừ cột cuối cùng
         y = dataframe.iloc[:, -1]      # Chọn cột cuối cùng
@@ -25,13 +33,30 @@ class UseGradientDescent:
         self.y_test = y.iloc[split_index:]   
 
     def training(self):
-        return self._gradient_descent(self.X_train, self.y_train)
+        cost_values = self._gradient_descent(self.X_train, self.y_train)
+        cost_values_validate = self._gradient_descent(self.X_test, self.y_test)
+        return cost_values, cost_values_validate
 
     def predict(self, data_input):
         linear_model = np.dot(data_input, self.weights) + self.bias
         y_pred = self._sigmoid(linear_model)
         predictions = [1 if i > 0.5 else 0 for i in y_pred]  # Ngưỡng phân lớp 0.5
         return predictions
+    
+    def predictFor(self, data_input):
+        data_input = np.array(data_input)
+        # Chuyển data_input thành vector hàng (1, n)
+        if data_input.ndim == 1:
+            data_input = data_input.reshape(1, -1)
+        data_input = pd.DataFrame(data_input, columns=self.X_train.columns.tolist())
+        data_input = Normalization.encode_dataframe_with_encoders(data_input, self.label_encoders)
+        data_input_np = self.convert_to_numeric(data_input)
+
+        linear_model = np.dot(data_input_np, self.weights) + self.bias
+        y_pred = self._sigmoid(linear_model[0])
+        prediction = 1 if y_pred > 0.5 else 0 # Ngưỡng phân lớp 0.5
+        
+        return prediction
 
     def testing(self):
         # Dự đoán trên tập testing
@@ -50,7 +75,7 @@ class UseGradientDescent:
         print("Coefficients (hệ số của các biến độc lập):", self.weights)
         # self.plot_loss(self.cost_values)
 
-    def _gradient_descent(self, X, y, learning_rate=1e-5, iterations=1500):
+    def _gradient_descent(self, X, y, learning_rate=1e-4, iterations=1500):
         m, n = X.shape  # m: số lượng mẫu, n: số lượng đặc trưng
         # Khởi tạo trọng số
         self.weights = np.zeros(n)  
@@ -102,3 +127,13 @@ class UseGradientDescent:
         plt.ylabel('Cost (binary cross-entropy)')
         plt.title('Sự thay đổi của binary cross-entropy theo các vòng lặp Gradient Descent')
         plt.show()
+
+    # Hàm chuyển đổi dữ liệu từ chuỗi sang kiểu số 
+    def convert_to_numeric(self, data_input):
+        data_input = np.array(data_input)
+        for i in range(data_input.shape[1]):  
+            try:
+                data_input[:, i] = data_input[:, i].astype(float)
+            except ValueError:
+                pass
+        return data_input

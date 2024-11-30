@@ -12,12 +12,20 @@ from utils.CSVHandler import CSVHandler
 
 class UseSklearn:
     def __init__(self, datasetURL, train_size=0.5):
-        self.model = SGDClassifier(loss='log_loss', max_iter=1500, tol=1e-5)
+        self.model = SGDClassifier(loss='log_loss', shuffle=False, random_state=42, max_iter=1500, tol=1e-2, alpha=0.1, penalty='l2') #
 
         csv_handler = CSVHandler(datasetURL)
         dataframe = csv_handler.read_csv()   
 
-        dataframe, label_encoders = Normalization.encode_dataframe(dataframe)
+        # Chuẩn hóa dữ liệu từ string sang số "1,2" -> 1.2
+        pattern = r"^\d,\d$" 
+        for col in dataframe.columns:
+            if dataframe[col].dtype not in ['int64', 'float64']:
+                if dataframe[col].str.match(pattern).all():
+                    dataframe[col] = dataframe[col].apply(lambda x: float(x.replace(',', '.')) if isinstance(x, str) else x)
+
+        dataframe = Normalization.minMaxNormalizationNolib(dataframe, 0, 1)
+        dataframe, self.label_encoders = Normalization.encode_dataframe(dataframe)
             
         X = dataframe.iloc[:, :-1]     # Chọn tất cả các hàng và cột trừ cột cuối cùng
         y = dataframe.iloc[:, -1]      # Chọn cột cuối cùng
@@ -32,13 +40,18 @@ class UseSklearn:
     def training(self):
         # self.model.fit(self.X_train, self.y_train)
         self.loss_history = []
+        self.loss_history_validate = []
         count_patience = 0 
         for i in range(self.model.max_iter):
             self.model.partial_fit(self.X_train, self.y_train, classes=np.unique(self.y_train))
             # Dự đoán trên tập huấn luyện để tính toán loss
-            y_train_pred = self.model.predict_proba(self.X_train)  # Dự đoán xác suất
+            y_train_pred = self.model.predict_proba(self.X_train)  
             loss = log_loss(self.y_train, y_train_pred)  # Tính loss
             self.loss_history.append(loss)
+
+            y_validate_pred = self.model.predict_proba(self.X_test) 
+            loss_validate = log_loss(self.y_test, y_validate_pred)  
+            self.loss_history_validate.append(loss_validate)
 
             threshold = 10  # Ngưỡng thay đổi loss
             if i > 0 and abs(self.loss_history[-1] - self.loss_history[-2]) < threshold:
@@ -48,10 +61,22 @@ class UseSklearn:
                     break
             else:
                 count_patience = 0 
-        return self.loss_history
+        return self.loss_history, self.loss_history_validate
 
     def predict(self, data_input):
         return self.model.predict(data_input)
+    
+    def predictFor(self, data_input):
+        data_input = np.array(data_input)
+        # Chuyển data_input thành vector hàng (1, n)
+        if data_input.ndim == 1:
+            data_input = data_input.reshape(1, -1)
+        data_input = pd.DataFrame(data_input, columns=self.X_train.columns.tolist())
+        data_input = Normalization.encode_dataframe_with_encoders(data_input, self.label_encoders)
+        y_pred = self.model.predict(data_input)
+        
+        return y_pred
+    
 
     def testing(self):
         # Dự đoán trên tập testing

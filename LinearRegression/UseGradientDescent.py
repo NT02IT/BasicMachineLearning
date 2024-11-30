@@ -1,13 +1,14 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from Normalization.Normalization import Normalization
 from utils.CSVHandler import CSVHandler
 
 class UseGradientDescent:
-    def __init__(self, datasetURL, train_size=0.5, learning_rate=1e-4, iterations=1500): # Thử thêm với learning_rate=1e-4
+    def __init__(self, datasetURL, train_size=0.5, learning_rate=0.01, iterations=1500): # Thử thêm với learning_rate=1e-4
         csv_handler = CSVHandler(datasetURL)
         dataframe = csv_handler.read_csv()
-
+        dataframe = Normalization.minMaxNormalizationWlib(dataframe, 0, 1) 
         for col in dataframe.columns:
             if dataframe[col].dtype not in ['int64', 'float64']:
                 dataframe[col] = dataframe[col].apply(lambda x: float(x.replace(',', '.')) if isinstance(x, str) else x)
@@ -34,10 +35,13 @@ class UseGradientDescent:
         # Gradient Descent để tối ưu trọng số
         m = len(self.X_train)
         loss_values = []
+        loss_values_validate = []
         count_patience = 0
         for i in range(self.iterations):
             predictions = self.X_train.dot(self.weights)  # Dự đoán y = Xw
             errors = predictions - self.y_train  # Tính sai số (error)
+
+            predictions_validate = self.X_test.dot(self.weights)
 
             # Cập nhật trọng số bằng cách sử dụng Gradient Descent
             gradient = (2/m) * self.X_train.T.dot(errors)  # Gradient of MSE
@@ -48,6 +52,9 @@ class UseGradientDescent:
             loss = self._meanSquaredError(self.y_train, predictions)
             loss_values.append(loss)
 
+            loss_validate = self._meanSquaredError(self.y_test, predictions_validate)
+            loss_values_validate.append(loss_validate)
+
             threshold = 1e+5  # Ngưỡng thay đổi loss
             if i > 0 and abs(loss_values[-1] - loss_values[-2]) < threshold:
                 count_patience += 1
@@ -56,7 +63,7 @@ class UseGradientDescent:
                     break
             else:
                 count_patience = 0
-        return loss_values
+        return loss_values, loss_values_validate
 
     def predict(self, data_input):
         # Dự đoán giá trị đầu ra cho dữ liệu đầu vào
