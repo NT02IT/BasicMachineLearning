@@ -73,7 +73,9 @@ class UseGradientDescent:
         print("Mẫu training:", len(self.y_train))
         print("Intercept (hệ số tự do):", self.bias)
         print("Coefficients (hệ số của các biến độc lập):", self.weights)
-        # self.plot_loss(self.cost_values)
+        print("MSE:", self.cost_values[-1])
+        # self.plot_loss(self.cost_values) 
+        
 
     def _gradient_descent(self, X, y, learning_rate=1e-4, iterations=1500):
         m, n = X.shape  # m: số lượng mẫu, n: số lượng đặc trưng

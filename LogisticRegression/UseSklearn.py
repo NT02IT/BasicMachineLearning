@@ -90,3 +90,4 @@ class UseSklearn:
         print("Mẫu training:", len(self.y_train))
         print("Intercept (hệ số tự do):", self.model.intercept_[0])
         print("Coefficients (hệ số của các biến độc lập):", self.model.coef_[0])
+        print("MSE:", self.loss_history[-1])

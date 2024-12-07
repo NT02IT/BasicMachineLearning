@@ -81,10 +81,10 @@ def runLinearRegression():
     # linearUseGradientDescent.plot_loss(loss_values)
     # Vẽ biểu đồ hàm loss qua các vòng lặp của cả 2 pp
     plt.figure(figsize=(10, 6))
-    # plt.plot(range(len(loss_values_sklearn)), np.array(loss_values_sklearn), label='WithLib') 
+    plt.plot(range(len(loss_values_sklearn)), np.array(loss_values_sklearn), label='WithLib') 
     # plt.plot(range(len(loss_values_validate_sklearn)), np.array(loss_values_validate_sklearn), label='WithLib - Validate') 
     plt.plot(range(len(loss_values_gd)), np.array(loss_values_gd), label='NoLib')
-    plt.plot(range(len(loss_values_validate_gd)), np.array(loss_values_validate_gd), label='NoLib - Validate')
+    # plt.plot(range(len(loss_values_validate_gd)), np.array(loss_values_validate_gd), label='NoLib - Validate')
     plt.xlabel('Số lần lặp (Iterations)')
     plt.ylabel('Loss (MSE)')
     plt.title('Sự thay đổi của MSE theo các vòng lặp Gradient Descent')
@@ -127,8 +127,8 @@ def runLogisticRegression():
 
     # Vẽ biểu đồ hàm loss qua các vòng lặp của cả 2 pp
     plt.figure(figsize=(10, 6))
-    plt.plot(range(len(loss_values_sklearn)), loss_values_sklearn, label='WithLib')
-    plt.plot(range(len(loss_history_validate_sklearn)), loss_history_validate_sklearn, label='WithLib - Validate')
+    # plt.plot(range(len(loss_values_sklearn)), loss_values_sklearn, label='WithLib')
+    # plt.plot(range(len(loss_history_validate_sklearn)), loss_history_validate_sklearn, label='WithLib - Validate')
     plt.plot(range(len(loss_values_gd)), loss_values_gd, label='NoLib')
     plt.plot(range(len(loss_values_validate_gd)), loss_values_validate_gd, label='NoLib - Validate')
     plt.xlabel('Số lần lặp (Iterations)')
@@ -296,11 +296,11 @@ def runKNN():
 def main():
     os.system('cls')
     # runLinearRegression()
-    # runLogisticRegression()
+    runLogisticRegression()
     # runNaiveBayes()
     # runApriori()
     # runNormalization()
-    runKNN()
+    # runKNN()
 
 if __name__ == "__main__":
     main()

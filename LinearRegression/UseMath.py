@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
+from Normalization.Normalization import Normalization
 from utils.CSVHandler import CSVHandler
 
 class UseMath:
@@ -10,9 +11,14 @@ class UseMath:
         dataframe = csv_handler.read_csv()
 
         # Chuẩn hóa dữ liệu từ string sang số "1,2" -> 1.2
+        pattern = r"^\d,\d$" 
         for col in dataframe.columns:
             if dataframe[col].dtype not in ['int64', 'float64']:
-                dataframe[col] = dataframe[col].apply(lambda x: float(x.replace(',', '.')) if isinstance(x, str) else x)
+                if dataframe[col].str.match(pattern).all():
+                    dataframe[col] = dataframe[col].apply(lambda x: float(x.replace(',', '.')) if isinstance(x, str) else x)
+
+        dataframe = Normalization.minMaxNormalizationNolib(dataframe, 0, 1)
+        dataframe, self.label_encoders = Normalization.encode_dataframe(dataframe)
 
         X = dataframe.iloc[:, :-1].values  # Các biến độc lập
         y = dataframe.iloc[:, -1].values   # Biến phụ thuộc
